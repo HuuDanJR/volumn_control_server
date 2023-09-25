@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Driver = require('./driver'); // Import your Mongoose model
+var Trip = require('./trip')
 
 const { ObjectId } = mongoose.Types;
 
@@ -30,6 +31,14 @@ const FeedBackSchema = new mongoose.Schema({
         required:true,
         type: [String],
         // type:String,
+    },
+    // trip:{
+    //     type: ObjectId, // Reference the Driver schema by ObjectId
+    //     ref: 'Trip', // Set the reference to the 'Driver' model
+    // },
+    trip: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'trips', // Make sure it matches the model name 'trips' defined in mongoose.model
     },
     //status: bad,good
     status:{

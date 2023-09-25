@@ -2015,7 +2015,7 @@
     "@aws-sdk/credential-providers" "^3.186.0"
     "@mongodb-js/saslprep" "^1.1.0"
 
-"mongoose@^6.4.5":
+"mongoose@^6.12.0":
   "integrity" "sha512-sd/q83C6TBRPBrrD2A/POSbA/exbCFM2WOuY7Lf2JuIJFlHFG39zYSDTTAEiYlzIfahNOLmXPxBGFxdAch41Mw=="
   "resolved" "https://registry.npmjs.org/mongoose/-/mongoose-6.12.0.tgz"
   "version" "6.12.0"
