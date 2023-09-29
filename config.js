@@ -19,10 +19,10 @@ const connectDB = async () => {
       URL,
       DB_OPTIONS
     )
-    console.log(`Connected to mongoDB feedback car `);
+    console.log(`Connected to mongoDB feedback car`);
     return connect;
   } catch (error) {
-    console.log('cannot connect feedback car')
+    console.log('Cannot connect feedback car')
     process.exit(1)
   }
 }
