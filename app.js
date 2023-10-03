@@ -441,20 +441,36 @@ app.put('/update_feedback_old', async (req, res) => {
   });
 
 //get allfeedback
+// app.get('/list_feedback', async (req, res) => {
+//     feedbackModel.find(function (err, data) {
+//         if (err) {
+//             console.log(err);
+//         }
+//         else {
+//             if (data == null || data.length == 0) {
+//                 res.send({ "status": false, "message": "find list feedback fail", "totalResult": null, "data": data, })
+//             } else {
+//                 res.send({ "status": true, "message": "find list feedback success", "totalResult": data.length, "data": data });
+//             }
+//         }
+//     });
+// })
 app.get('/list_feedback', async (req, res) => {
-    feedbackModel.find(function (err, data) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            if (data == null || data.length == 0) {
-                res.send({ "status": false, "message": "find list feedback fail", "totalResult": null, "data": data, })
-            } else {
-                res.send({ "status": true, "message": "find list feedback success", "totalResult": data.length, "data": data });
-            }
-        }
-    });
-})
+  feedbackModel.find({})
+      .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+      .exec(function (err, data) {
+          if (err) {
+              console.log(err);
+              res.status(500).send({ "status": false, "message": "An error occurred" });
+          } else {
+              if (data == null || data.length == 0) {
+                  res.send({ "status": false, "message": "find list feedback fail", "totalResult": null, "data": data });
+              } else {
+                  res.send({ "status": true, "message": "find list feedback success", "totalResult": data.length, "data": data });
+              }
+          }
+      });
+});
 
 
 
