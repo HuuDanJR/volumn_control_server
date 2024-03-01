@@ -130,12 +130,13 @@ app.post('/update_volume_value/:id', async (req, res) => {
 app.get('/list_preset', async (req, res) => {
   try {
     // const volumes = await volumeModel.find().sort({ id: 1 }).lean(); 
-    const presets = await presetsModel.find().lean(); // Sorting by id in ascending order (ASC)
+    const presets = await presetsModel.find().populate('volumes').lean(); // Sorting by id in ascending order (ASC)
+    const createdAt = new Date().toISOString();
     presets.sort((a, b) => parseInt(a.id) - parseInt(b.id));
     if (!presets || presets.length === 0) {
       res.status(404).send({ "status": false, "message": `no presets found `, "data": null });
     } else {
-      res.status(200).send({ "status": true, "message": `presets found ${presets.length}`, "data": presets });
+      res.status(200).send({ "status": true, "message": `presets found ${presets.length}`,"createAt":createdAt, "data": presets });
     }
   } catch (err) {
     res.status(500).send({ "status": false, "message": "fail to retrieve presets", "data": null });
@@ -143,7 +144,7 @@ app.get('/list_preset', async (req, res) => {
 });
 
 // create a new preset
-app.get('/create_preset', async (req, res) => {
+app.post('/create_preset', async (req, res) => {
   try {
     const {  volumes, presetId,presetName } = req.body;
     const existingRecord = await presetsModel.findOne({ presetId, presetName, });
@@ -157,3 +158,51 @@ app.get('/create_preset', async (req, res) => {
     res.status(500).send({ "status": false, "message": "Internal server error", "data": null });
   }
 });
+
+// Route to delete a preset by ID
+router.delete('/delete_preset/:presetId', async (req, res) => {
+  const { presetId } = req.params;
+  try {
+      // Find the preset by ID and delete it
+      const deletedPreset = await presetsModel.findByIdAndDelete(presetId);
+      if (!deletedPreset) {
+          // If preset is not found, return 404 Not Found
+          return res.status(404).json({ success: false, message: 'Preset not found',data:null });
+      }
+      // If preset is successfully deleted, return success response
+      return res.status(200).json({ success: true, message: `Preset deleted successfully `,data:deletedPreset });
+  } catch (error) {
+      // If an error occurs during deletion, return 500 Internal Server Error
+      return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+  }
+});
+
+// Route to update a preset by ID
+router.put('/update_preset/:presetId', async (req, res) => {
+  const { presetId } = req.params;
+  const { presetName, volumes } = req.body;
+
+  try {
+      // Find the preset by ID
+      let preset = await presetsModel.findById(presetId);
+
+      if (!preset) {
+          // If preset is not found, return 404 Not Found
+          return res.status(404).json({ success: false, message: 'Preset not found' });
+      }
+
+      // Update preset properties
+      preset.presetName = presetName || preset.presetName;
+      preset.volumes = volumes || preset.volumes;
+
+      // Save the updated preset
+      preset = await preset.save();
+
+      // Return success response with updated preset
+      return res.status(200).json({ success: true, message: 'Preset updated successfully', preset });
+  } catch (error) {
+      // If an error occurs during update, return 500 Internal Server Error
+      return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+  }
+});
+

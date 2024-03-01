@@ -10,7 +10,10 @@ const PresetSchema = new mongoose.Schema({
         required: true,
         type: String
     },
-    
+    createdAt: {
+        default: Date.now(),
+        type: Date,
+    },
     volumes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'volumes'
