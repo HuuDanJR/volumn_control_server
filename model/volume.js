@@ -34,6 +34,18 @@ const VolumeControlSchema = new mongoose.Schema({
     },
     presetId:{
         type:String,
+    },
+    type:{ 
+        required:true,
+        type:Number //0 : default | 1 : preset volume
+    },
+    dx:{
+        required :true,
+        type:Number,
+    },
+    dy:{
+        required:true,
+        type:Number,
     }
 })
 
