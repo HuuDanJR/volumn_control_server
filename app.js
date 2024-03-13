@@ -126,6 +126,23 @@ app.post('/update_volume/:id', async (req, res) => {
     res.status(500).send({ "status": false, "message": "fail to update volume", "data": null });
   }
 });
+// Route to update a volume by ID
+app.post('/update_volume_position/:id', async (req, res) => {
+  try {
+    const volume = await volumeModel.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: { dx: req.body.dx, dy: req.body.dy } }, // Update dx and dy fields
+      { new: true } // Return the updated document
+    );
+    if (!volume) {
+      res.status(404).send({ "status": false, "message": "volume not found", "data": null });
+    } else {
+      res.status(200).send({ "status": true, "message": "volume updated successfully", "data": volume });
+    }
+  } catch (err) {
+    res.status(500).send({ "status": false, "message": "fail to update volume", "data": null });
+  }
+});
 
 // Route to update the currentValue field of a volume by ID
 app.post('/update_volume_value/:id', async (req, res) => {
